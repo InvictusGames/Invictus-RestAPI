@@ -60,20 +60,16 @@ public class AccountController {
             return new ResponseEntity<>(response.build(), HttpStatus.CONFLICT);
         }
 
+        // TODO: 23.03.2023 create your own mail server and send the registration email
+
         ForumAccount account = new ForumAccount();
         account.setUuid(profile.getUuid());
         account.setEmail(body.get("email").getAsString().toLowerCase());
         account.setToken(body.get("token").getAsString());
         api.getForumService().getAccountService().saveAccount(account);
 
-
         response.add("message", "Confirmation email sent");
         return new ResponseEntity<>(response.build(), HttpStatus.OK);
-        } catch (MessagingException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-            response.add("message", e.getClass().getSimpleName() + " when sending email");
-            return new ResponseEntity<>(response.build(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     @GetMapping(path = "/threads/{uuid}")
